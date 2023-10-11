@@ -20,6 +20,7 @@
         </ion-card-header>
         <ion-card-content>
           <p>Materiale: <strong>{{ event.attributes.materiale }}</strong></p>
+          <ion-toggle>Deltager ikke</ion-toggle>
         </ion-card-content>
       </ion-card>
 
@@ -28,7 +29,7 @@
 </template>
 
 <script setup>
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle} from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonToggle} from '@ionic/vue';
 import { onMounted, ref } from 'vue';
 
 const title = 'Aktiviteter'
