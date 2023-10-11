@@ -1,0 +1,7 @@
+{
+  "name": "chorusAppUI",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}
