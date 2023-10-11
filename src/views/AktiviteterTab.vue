@@ -34,16 +34,26 @@ import { onMounted, ref } from 'vue';
 
 const title = 'Aktiviteter'
 const allEvents = ref([])
+const username = 'daniar'
 
-const fetchEvents = async () => {
-  await fetch('http://localhost:8080/api/events')
+const checkAttendance = (event, username) => {
+  const attendancesData = event.attributes.attendances.data
+  for (let i = 0; i < attendancesData.length; i++) {
+    console.log(attendancesData[i])
+  }
+}
+
+const fetchEvents = async (username) => {
+  await fetch('http://localhost:8080/api/events?populate[attendances][populate][0]=user')
     .then(response => response.json())
     .then(data => {
+      console.log(data.data)
       allEvents.value = data.data
     })
 }
 
+
 onMounted(() => {
-  fetchEvents()
+  fetchEvents(username)
 })
 </script>
