@@ -20,7 +20,8 @@
         </ion-card-header>
         <ion-card-content>
           <p>Materiale: <strong>{{ event.attributes.materiale }}</strong></p>
-          <ion-toggle>Deltager ikke</ion-toggle>
+          <ion-toggle v-if="checkAttendance(event)">Deltager ikke</ion-toggle>
+          <ion-toggle v-else checked>Deltager ikke</ion-toggle>
         </ion-card-content>
       </ion-card>
 
@@ -34,26 +35,44 @@ import { onMounted, ref } from 'vue';
 
 const title = 'Aktiviteter'
 const allEvents = ref([])
-const username = 'daniar'
+const allUserAttendance = ref([])
+const username = 'kristine'
 
-const checkAttendance = (event, username) => {
-  const attendancesData = event.attributes.attendances.data
-  for (let i = 0; i < attendancesData.length; i++) {
-    console.log(attendancesData[i])
+const checkAttendance = event => {
+  const attendanceLog = allUserAttendance.value
+  
+  const eventLogged = attendanceLog.some(obj => obj.attributes.event.data.id === event.id)
+  if (eventLogged) {
+    for (let i = 0; i < attendanceLog.length; i++) {
+      if (event.id == attendanceLog[i].attributes.event.data.id) {
+        return attendanceLog[i].attributes.present
+      }
+    }
+  } else {
+    return true
   }
 }
 
-const fetchEvents = async (username) => {
-  await fetch('http://localhost:8080/api/events?populate[attendances][populate][0]=user')
+const fetchUserAttendance = () => {
+  fetch(`http://localhost:8080/api/attendances?filters[user][username][$eq]=${username}&populate=event`)
     .then(response => response.json())
     .then(data => {
-      console.log(data.data)
+      allUserAttendance.value = data.data
+    })
+}
+
+const fetchEvents = () => {
+  fetch('http://localhost:8080/api/events')
+    .then(response => response.json())
+    .then(data => {
+      // console.log(data.data)
       allEvents.value = data.data
     })
 }
 
 
 onMounted(() => {
-  fetchEvents(username)
+  fetchUserAttendance()
+  fetchEvents()
 })
 </script>
