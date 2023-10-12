@@ -20,8 +20,8 @@
         </ion-card-header>
         <ion-card-content>
           <p>Materiale: <strong>{{ event.attributes.materiale }}</strong></p>
-          <ion-toggle v-if="checkAttendance(event)">Deltager ikke</ion-toggle>
-          <ion-toggle v-else checked>Deltager ikke</ion-toggle>
+          <ion-toggle @ion-change="toggleAttendance(event)" v-if="checkAttendance(event)">Deltager ikke</ion-toggle>
+          <ion-toggle @ion-change="toggleAttendance(event)" v-else checked>Deltager ikke</ion-toggle>
         </ion-card-content>
       </ion-card>
 
@@ -36,7 +36,54 @@ import { onMounted, ref } from 'vue';
 const title = 'Aktiviteter'
 const allEvents = ref([])
 const allUserAttendance = ref([])
-const username = 'kristine'
+const username = 'daniar'
+const userid = 1
+
+const toggleAttendance = event => {
+  // console.log(event)
+
+  const payload = {
+    "data": {
+      user: userid,
+      event: event.id,
+      present: true
+    }
+  }
+
+  fetch(`http://localhost:8080/api/attendances?filters[user][username][$eq]=${username}&filters[event][id][$eq]=${event.id}`)
+    .then(response => response.json())
+    .then(data => {
+      if (data.data.length > 0) {
+        console.log(data.data)
+        payload.data.present = !data.data[0].attributes.present
+        const attendanceId = data.data[0].id
+        updateAttendance(payload, attendanceId)
+      } else {
+        payload.data.present = false
+        createAttendance(payload)
+      }
+    })
+}
+
+const createAttendance = async (payload) => {
+  await fetch('http://localhost:8080/api/attendances', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  })
+}
+
+const updateAttendance = async (payload, attendanceId) => {
+  await fetch(`http://localhost:8080/api/attendances/${attendanceId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  })
+}
 
 const checkAttendance = event => {
   const attendanceLog = allUserAttendance.value
