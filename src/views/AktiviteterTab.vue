@@ -12,8 +12,10 @@
         </ion-toolbar>
       </ion-header>
 
-      <ion-card v-for="event in allEvents" @click="openModal(event)">
-        <ion-card-header>
+      <h1 class="ion-padding">Hej {{ username }}</h1>
+
+      <ion-card v-for="event in allEvents">
+        <ion-card-header class="eventHeader" @click="openModal(event)">
           <ion-card-title>{{ event.attributes.placering }}</ion-card-title>
           <ion-card-subtitle>{{ event.attributes.dato }}</ion-card-subtitle>
           <ion-card-subtitle>{{ event.attributes.type }}</ion-card-subtitle>
@@ -148,3 +150,9 @@ onMounted(() => {
   fetchEvents()
 })
 </script>
+
+<style scoped>
+.eventHeader {
+  cursor: pointer;
+}
+</style>

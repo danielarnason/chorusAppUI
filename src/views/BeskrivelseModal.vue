@@ -1,5 +1,5 @@
 <template>
-    <ion-modal :initial-breakpoint="0.5" :breakpoints="[0, 0.25, 0.5, 0.75]" :is-open="modalVisible" @didDismiss="$emit('closeModalEvent')">
+    <ion-modal :initial-breakpoint="0.75" :breakpoints="[0, 0.25, 0.5, 0.75]" :is-open="modalVisible" @didDismiss="$emit('closeModalEvent')">
         <ion-header>
           <ion-toolbar>
             <ion-title>{{ props.event.attributes.placering }} <br> {{ props.event.attributes.dato }}</ion-title>

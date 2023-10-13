@@ -15,7 +15,7 @@
       <ion-card v-for="news in allNews">
         <ion-card-header>
           <ion-card-title>{{ news.attributes.Titel }}</ion-card-title>
-          <ion-card-subtitle>{{ news.attributes.createdAt }}</ion-card-subtitle>
+          <ion-card-subtitle>{{ parseDate(news.attributes.createdAt) }}</ion-card-subtitle>
         </ion-card-header>
         <ion-card-content class="ion-padding">
           <p>{{ news.attributes.Besked }}</p>
@@ -38,6 +38,12 @@ const fetchAllNews = () => {
     .then(data => {
       allNews.value = data.data
     })
+}
+
+const parseDate = timestamp => {
+  const date = new Date(timestamp)
+  const formattedDate = `${date.toISOString().split('T')[0]} ${date.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' })}`;
+  return formattedDate
 }
 
 onMounted(() => {
