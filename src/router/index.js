@@ -18,10 +18,10 @@ const routes = [
         path: 'aktiviteter',
         component: () => import('@/views/AktiviteterTab.vue')
       },
-      // {
-      //   path: 'tab2',
-      //   component: () => import('@/views/Tab2Page.vue')
-      // }
+      {
+        path: 'nyhedsfeed',
+        component: () => import('@/views/NyhedsFeed.vue')
+      }
     ]
   }
 ]

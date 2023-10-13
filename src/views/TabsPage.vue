@@ -8,10 +8,10 @@
           <ion-label>Aktiviteter</ion-label>
         </ion-tab-button>
 
-        <!-- <ion-tab-button tab="tab2" href="/tabs/tab2">
+        <ion-tab-button tab="nyhedsfeed" href="/tabs/nyhedsfeed">
           <ion-icon aria-hidden="true" :icon="newspaperOutline" />
           <ion-label>Tab 2</ion-label>
-        </ion-tab-button> -->
+        </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
   </ion-page>
