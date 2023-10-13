@@ -12,7 +12,7 @@
         </ion-toolbar>
       </ion-header>
 
-      <ion-card v-for="event in allEvents">
+      <ion-card v-for="event in allEvents" @click="openModal(event)">
         <ion-card-header>
           <ion-card-title>{{ event.attributes.placering }}</ion-card-title>
           <ion-card-subtitle>{{ event.attributes.dato }}</ion-card-subtitle>
@@ -25,19 +25,44 @@
         </ion-card-content>
       </ion-card>
 
+      <BeskrivelseModal @closeModalEvent="closeModal" :modalVisible="modalVisible" :event="clickedEvent"/>
+
     </ion-content>
   </ion-page>
 </template>
 
 <script setup>
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonToggle} from '@ionic/vue';
+import { 
+  IonPage, 
+  IonHeader, 
+  IonToolbar, 
+  IonTitle, 
+  IonContent, 
+  IonCard, 
+  IonCardContent, 
+  IonCardHeader, 
+  IonCardSubtitle, 
+  IonCardTitle, 
+  IonToggle} from '@ionic/vue';
 import { onMounted, ref } from 'vue';
+import BeskrivelseModal from './BeskrivelseModal.vue';
 
 const title = 'Aktiviteter'
 const allEvents = ref([])
 const allUserAttendance = ref([])
 const username = 'daniar'
 const userid = 1
+const modalVisible = ref(false)
+const clickedEvent = ref()
+
+const openModal = (event) => {
+  clickedEvent.value = event
+  modalVisible.value = true
+}
+
+const closeModal = () => {
+  modalVisible.value = false
+}
 
 const toggleAttendance = event => {
   // console.log(event)
