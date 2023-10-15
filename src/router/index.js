@@ -3,6 +3,10 @@ import TabsPage from '../views/TabsPage.vue'
 
 const routes = [
   {
+    path: '/login',
+    component: () => import('@/views/Login.vue')
+  },
+  {
     path: '/',
     redirect: '/tabs/aktiviteter'
   },
