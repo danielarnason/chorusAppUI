@@ -12,7 +12,7 @@
         </ion-toolbar>
       </ion-header>
 
-      <h1 class="ion-padding">Hej {{ username }}</h1>
+      <h1 class="ion-padding">Hej {{ store.username }}</h1>
 
       <ion-card v-for="event in allEvents">
         <ion-card-header class="eventHeader" @click="openModal(event)">
@@ -48,11 +48,14 @@ import {
   IonToggle} from '@ionic/vue';
 import { onMounted, ref } from 'vue';
 import BeskrivelseModal from './BeskrivelseModal.vue';
+import { useUserStore } from './stores/user.js';
+
+const store = useUserStore()
 
 const title = 'Aktiviteter'
 const allEvents = ref([])
 const allUserAttendance = ref([])
-const username = 'daniar'
+// const username = 'daniar'
 const userid = 1
 const modalVisible = ref(false)
 const clickedEvent = ref()
@@ -77,7 +80,7 @@ const toggleAttendance = event => {
     }
   }
 
-  fetch(`http://localhost:8080/api/attendances?filters[user][username][$eq]=${username}&filters[event][id][$eq]=${event.id}`)
+  fetch(`http://localhost:8080/api/attendances?filters[user][username][$eq]=${store.username}&filters[event][id][$eq]=${event.id}`)
     .then(response => response.json())
     .then(data => {
       if (data.data.length > 0) {
@@ -128,7 +131,7 @@ const checkAttendance = event => {
 }
 
 const fetchUserAttendance = () => {
-  fetch(`http://localhost:8080/api/attendances?filters[user][username][$eq]=${username}&populate=event`)
+  fetch(`http://localhost:8080/api/attendances?filters[user][username][$eq]=${store.username}&populate=event`)
     .then(response => response.json())
     .then(data => {
       allUserAttendance.value = data.data
