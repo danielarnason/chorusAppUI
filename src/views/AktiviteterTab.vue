@@ -56,7 +56,7 @@ const title = 'Aktiviteter'
 const allEvents = ref([])
 const allUserAttendance = ref([])
 // const username = 'daniar'
-const userid = 1
+// const userid = 1
 const modalVisible = ref(false)
 const clickedEvent = ref()
 
