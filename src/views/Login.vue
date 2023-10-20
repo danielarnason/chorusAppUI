@@ -10,7 +10,8 @@
             <ion-input v-model="password" type="password"></ion-input>
         </ion-item>
 
-        <ion-button @click="store.login(username, password)">Login</ion-button>
+        <ion-button @click="handleLogin()">Login</ion-button>
+        <!-- <ion-button @click="store.login(username, password)">Login</ion-button> -->
         <ion-button fill="outline">Sign up</ion-button>
         
     </ion-page>
@@ -20,9 +21,16 @@
 import { IonPage, IonItem, IonLabel, IonInput, IonButton } from '@ionic/vue';
 import { useUserStore } from './stores/user.js'
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const store = useUserStore()
 const username = ref()
 const password = ref()
+const router = useRouter()
+
+const handleLogin = () => {
+    store.login(username.value, password.value)
+    router.push('/')
+}
 
 </script>

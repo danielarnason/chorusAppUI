@@ -37,10 +37,10 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
-  const store = useUserStore()
-  if (to.name !== 'Login' && !store.isLoggedIn) next({ name: 'Login' })
-  else next()
-})
+// router.beforeEach((to, from, next) => {
+//   const store = useUserStore()
+//   if (to.name !== 'Login' && !store.isLoggedIn) next({ name: 'Login' })
+//   else next()
+// })
 
 export default router
