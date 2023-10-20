@@ -12,7 +12,7 @@
         </ion-toolbar>
       </ion-header>
 
-      <h1 class="ion-padding">Hej {{ store.username }}</h1>
+      <h1 class="ion-padding">Hej {{ store.user?.navn }}</h1>
 
       <ion-card v-for="event in allEvents">
         <ion-card-header class="eventHeader" @click="openModal(event)">
@@ -55,8 +55,6 @@ const store = useUserStore()
 const title = 'Aktiviteter'
 const allEvents = ref([])
 const allUserAttendance = ref([])
-// const username = 'daniar'
-// const userid = 1
 const modalVisible = ref(false)
 const clickedEvent = ref()
 
@@ -74,13 +72,13 @@ const toggleAttendance = event => {
 
   const payload = {
     "data": {
-      user: userid,
+      user: store.user.id,
       event: event.id,
       present: true
     }
   }
 
-  fetch(`http://localhost:8080/api/attendances?filters[user][username][$eq]=${store.username}&filters[event][id][$eq]=${event.id}`)
+  fetch(`http://localhost:8080/api/attendances?filters[user][username][$eq]=${store.user?.navn}&filters[event][id][$eq]=${event.id}`)
     .then(response => response.json())
     .then(data => {
       if (data.data.length > 0) {
@@ -116,7 +114,7 @@ const updateAttendance = async (payload, attendanceId) => {
 }
 
 const checkAttendance = event => {
-  const attendanceLog = allUserAttendance.value
+  const attendanceLog = store.userAttendance
   
   const eventLogged = attendanceLog.some(obj => obj.attributes.event.data.id === event.id)
   if (eventLogged) {
@@ -130,26 +128,16 @@ const checkAttendance = event => {
   }
 }
 
-const fetchUserAttendance = () => {
-  fetch(`http://localhost:8080/api/attendances?filters[user][username][$eq]=${store.username}&populate=event`)
-    .then(response => response.json())
-    .then(data => {
-      allUserAttendance.value = data.data
-    })
-}
-
 const fetchEvents = () => {
   fetch('http://localhost:8080/api/events')
     .then(response => response.json())
     .then(data => {
-      // console.log(data.data)
       allEvents.value = data.data
     })
 }
 
 
 onMounted(() => {
-  fetchUserAttendance()
   fetchEvents()
 })
 </script>
