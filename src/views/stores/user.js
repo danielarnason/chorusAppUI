@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
-import { computed, ref } from "vue";
+import { ref } from "vue";
+import router from "../../router";
 
 export const useUserStore = defineStore('user', () => {
     const user = ref()
@@ -25,6 +26,7 @@ export const useUserStore = defineStore('user', () => {
             user.value = data.user
             jwt.value = data.jwt
             isLoggedIn.value = true
+            router.push('/')
         })
         
         await fetch(`http://localhost:8080/api/attendances?filters[user][username][$eq]=${user.value.username}&populate=event`)

@@ -30,7 +30,6 @@ const router = useRouter()
 
 const handleLogin = () => {
     store.login(username.value, password.value)
-    router.push('/')
 }
 
 </script>
