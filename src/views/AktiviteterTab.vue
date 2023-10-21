@@ -22,8 +22,10 @@
         </ion-card-header>
         <ion-card-content>
           <p>Materiale: <strong>{{ event.attributes.materiale }}</strong></p>
-          <ion-toggle @ion-change="toggleAttendance(event)" v-if="checkAttendance(event)">Deltager ikke</ion-toggle>
-          <ion-toggle @ion-change="toggleAttendance(event)" v-else checked>Deltager ikke</ion-toggle>
+          <ion-item v-if="store.isLoggedIn && !store.fetchingData">
+            <ion-toggle @ion-change="toggleAttendance(event)" v-if="checkAttendance(event)">Deltager ikke</ion-toggle>
+            <ion-toggle @ion-change="toggleAttendance(event)" v-else checked>Deltager ikke</ion-toggle>
+          </ion-item>
         </ion-card-content>
       </ion-card>
 
@@ -68,7 +70,7 @@ const closeModal = () => {
 }
 
 const toggleAttendance = event => {
-  // console.log(event)
+  console.log(event)
 
   const payload = {
     "data": {
@@ -78,11 +80,11 @@ const toggleAttendance = event => {
     }
   }
 
-  fetch(`http://localhost:8080/api/attendances?filters[user][username][$eq]=${store.user?.navn}&filters[event][id][$eq]=${event.id}`)
+  fetch(`http://localhost:8080/api/attendances?filters[user][username][$eq]=${store.user?.username}&filters[event][id][$eq]=${event.id}`)
     .then(response => response.json())
     .then(data => {
+      console.log(data.data)
       if (data.data.length > 0) {
-        console.log(data.data)
         payload.data.present = !data.data[0].attributes.present
         const attendanceId = data.data[0].id
         updateAttendance(payload, attendanceId)
