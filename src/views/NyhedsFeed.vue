@@ -14,11 +14,11 @@
 
       <ion-card v-for="news in allNews">
         <ion-card-header>
-          <ion-card-title>{{ news.attributes.Titel }}</ion-card-title>
-          <ion-card-subtitle>{{ parseDate(news.attributes.createdAt) }}</ion-card-subtitle>
+          <ion-card-title>{{ news.titel }}</ion-card-title>
+          <ion-card-subtitle>{{ parseDate(news.created_at) }}</ion-card-subtitle>
         </ion-card-header>
         <ion-card-content class="ion-padding">
-          <p>{{ news.attributes.Besked }}</p>
+          <p>{{ news.besked }}</p>
         </ion-card-content>
       </ion-card>
 
@@ -29,15 +29,26 @@
 <script setup>
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle } from '@ionic/vue';
 import { onMounted, ref } from 'vue';
+import { supabase } from '../lib/supabaseClient';
 
 const allNews= ref()
 
-const fetchAllNews = () => {
-  fetch('http://localhost:8080/api/nyheder')
-    .then(response => response.json())
-    .then(data => {
-      allNews.value = data.data
-    })
+const fetchAllNews = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('news')
+      .select()
+    if (error) throw error
+
+    allNews.value = data
+  } catch (error) {
+    alert(error.message)
+  }
+  // fetch('http://localhost:8080/api/nyheder')
+  //   .then(response => response.json())
+  //   .then(data => {
+  //     allNews.value = data.data
+  //   })
 }
 
 const parseDate = timestamp => {

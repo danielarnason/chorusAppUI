@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import TabsPage from '../views/TabsPage.vue'
 import { useUserStore } from '../views/stores/user';
+import { supabase } from '../lib/supabaseClient';
 
 const routes = [
   {
@@ -38,8 +39,10 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
+  
   const store = useUserStore()
-  if (to.name !== 'Login' && !store.isLoggedIn) {
+  const { data, error } = await supabase.auth.getSession()
+  if (to.name !== 'Login' && data.session == null) {
     next({name: 'Login'})
   } else {
     next()

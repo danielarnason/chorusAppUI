@@ -16,16 +16,16 @@
 
       <ion-card v-for="event in allEvents">
         <ion-card-header class="eventHeader" @click="openModal(event)">
-          <ion-card-title>{{ event.attributes.placering }}</ion-card-title>
-          <ion-card-subtitle>{{ event.attributes.dato }}</ion-card-subtitle>
-          <ion-card-subtitle>{{ event.attributes.type }}</ion-card-subtitle>
+          <ion-card-title>{{ event.placering }}</ion-card-title>
+          <ion-card-subtitle>{{ event.dato }}</ion-card-subtitle>
+          <ion-card-subtitle>{{ event.type }}</ion-card-subtitle>
         </ion-card-header>
         <ion-card-content>
-          <p>Materiale: <strong>{{ event.attributes.materiale }}</strong></p>
-          <ion-item v-if="store.isLoggedIn && !store.fetchingData">
+          <p>Materiale: <strong>{{ event.materiale }}</strong></p>
+          <!-- <ion-item v-if="store.isLoggedIn && !store.fetchingData">
             <ion-toggle @ion-change="toggleAttendance(event)" v-if="checkAttendance(event)">Deltager ikke</ion-toggle>
             <ion-toggle @ion-change="toggleAttendance(event)" v-else checked>Deltager ikke</ion-toggle>
-          </ion-item>
+          </ion-item> -->
         </ion-card-content>
       </ion-card>
 
@@ -51,6 +51,7 @@ import {
 import { onMounted, ref } from 'vue';
 import BeskrivelseModal from './BeskrivelseModal.vue';
 import { useUserStore } from './stores/user.js';
+import { supabase } from '../lib/supabaseClient';
 
 const store = useUserStore()
 
@@ -130,17 +131,34 @@ const checkAttendance = event => {
   }
 }
 
-const fetchEvents = () => {
-  fetch('http://localhost:8080/api/events')
-    .then(response => response.json())
-    .then(data => {
-      allEvents.value = data.data
-    })
+const fetchEvents = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('events')
+      .select()
+    if (error) throw error
+
+    allEvents.value = data
+    store.fetchingData = false
+  } catch (error) {
+    alert(error.message)
+  }
+  // fetch('http://localhost:8080/api/events')
+  //   .then(response => response.json())
+  //   .then(data => {
+  //     allEvents.value = data.data
+  //   })
+}
+
+const fetchUsername = async () => {
+  const { data: { user} } = await supabase.auth.getUser()
+  const { profileData, error } = await supabase.from('profiles').select()
 }
 
 
 onMounted(() => {
   fetchEvents()
+  fetchUsername()
 })
 </script>
 

@@ -2,14 +2,14 @@
     <ion-modal :initial-breakpoint="0.75" :breakpoints="[0, 0.25, 0.5, 0.75]" :is-open="modalVisible" @didDismiss="$emit('closeModalEvent')">
         <ion-header>
           <ion-toolbar>
-            <ion-title>{{ props.event.attributes.placering }} <br> {{ props.event.attributes.dato }}</ion-title>
+            <ion-title>{{ props.event.placering }} <br> {{ props.event.dato }}</ion-title>
             <ion-buttons slot="end">
               <ion-button @click="$emit('closeModalEvent')">Close</ion-button>
             </ion-buttons>
           </ion-toolbar>
         </ion-header>
         <ion-content class="ion-padding">
-          {{props.event.attributes.beskrivelse}}
+          {{props.event.beskrivelse}}
         </ion-content>
       </ion-modal>
 </template>
