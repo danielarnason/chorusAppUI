@@ -12,7 +12,7 @@
         </ion-toolbar>
       </ion-header>
 
-      <h1 class="ion-padding">Hej {{ store.userFullName }}</h1>
+      <h1 class="ion-padding">Hej {{ userFullName }}</h1>
 
       <ion-card v-for="event in allEvents">
         <ion-card-header class="eventHeader" @click="openModal(event)">
@@ -60,6 +60,7 @@ const allEvents = ref([])
 const allUserAttendance = ref([])
 const modalVisible = ref(false)
 const clickedEvent = ref()
+const userFullName = ref()
 
 const openModal = (event) => {
   clickedEvent.value = event
@@ -143,16 +144,17 @@ const fetchEvents = async () => {
   } catch (error) {
     alert(error.message)
   }
-  // fetch('http://localhost:8080/api/events')
-  //   .then(response => response.json())
-  //   .then(data => {
-  //     allEvents.value = data.data
-  //   })
 }
 
+const fetchUserName = async () => {
+  const { data: { user }} = await supabase.auth.getUser()
+  const { data, error } = await supabase.from('profiles').select().eq('id', user.id)
+  userFullName.value = `${data[0].first_name} ${data[0].last_name}`
+}
 
 onMounted(() => {
   fetchEvents()
+  fetchUserName()
 })
 </script>
 

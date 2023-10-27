@@ -28,11 +28,6 @@ export const useUserStore = defineStore('user', () => {
             alert(error.error_description || error.message)
         }
 
-        const { data: { user } } = await supabase.auth.getUser()
-
-        const { data, error } = await supabase.from('profiles').select().eq('id', user.id)
-        userFullName.value = `${data[0].first_name} ${data[0].last_name}`
-        
         router.push('/')
     }
 
