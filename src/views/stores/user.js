@@ -9,6 +9,7 @@ export const useUserStore = defineStore('user', () => {
     const isLoggedIn = ref(false)
     const userAttendance = ref()
     const fetchingData = ref(false)
+    const userFullName = ref()
 
 
     
@@ -26,37 +27,14 @@ export const useUserStore = defineStore('user', () => {
         } catch (error) {
             alert(error.error_description || error.message)
         }
+
+        const { data: { user } } = await supabase.auth.getUser()
+
+        const { data, error } = await supabase.from('profiles').select().eq('id', user.id)
+        userFullName.value = `${data[0].first_name} ${data[0].last_name}`
         
         router.push('/')
     }
 
-    // const login = async (username, password) => {
-    //     fetchingData.value = true
-    //     await fetch('http://localhost:8080/api/auth/local', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json'
-    //         },
-    //         body: JSON.stringify({
-    //             identifier: username,
-    //             password: password
-    //         })
-    //     })
-    //     .then(response => response.json())
-    //     .then(data => {
-    //         user.value = data.user
-    //         jwt.value = data.jwt
-    //         isLoggedIn.value = true
-    //         router.push('/')
-    //     })
-        
-    //     await fetch(`http://localhost:8080/api/attendances?filters[user][username][$eq]=${user.value.username}&populate=event`)
-    //     .then(response => response.json())
-    //     .then(data => {
-    //         userAttendance.value = data.data
-    //         fetchingData.value = false
-    //     })
-    // }
-
-    return { user, jwt, userAttendance, login, fetchingData, isLoggedIn }
+    return { user, jwt, userAttendance, login, fetchingData, isLoggedIn, userFullName }
 })

@@ -12,7 +12,7 @@
         </ion-toolbar>
       </ion-header>
 
-      <h1 class="ion-padding">Hej {{ store.user?.navn }}</h1>
+      <h1 class="ion-padding">Hej {{ store.userFullName }}</h1>
 
       <ion-card v-for="event in allEvents">
         <ion-card-header class="eventHeader" @click="openModal(event)">
@@ -150,15 +150,9 @@ const fetchEvents = async () => {
   //   })
 }
 
-const fetchUsername = async () => {
-  const { data: { user} } = await supabase.auth.getUser()
-  const { profileData, error } = await supabase.from('profiles').select()
-}
-
 
 onMounted(() => {
   fetchEvents()
-  fetchUsername()
 })
 </script>
 
