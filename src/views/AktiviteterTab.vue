@@ -29,6 +29,12 @@
         </ion-card-content>
       </ion-card>
 
+      <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+        <ion-fab-button @click="store.logout">
+          <ion-icon :icon="logOutOutline"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+      
       <BeskrivelseModal @closeModalEvent="closeModal" :modalVisible="modalVisible" :event="clickedEvent"/>
 
     </ion-content>
@@ -37,6 +43,9 @@
 
 <script setup>
 import { 
+  IonFab,
+  IonFabButton,
+  IonIcon,
   IonPage, 
   IonHeader, 
   IonToolbar, 
@@ -52,6 +61,7 @@ import { onMounted, ref } from 'vue';
 import BeskrivelseModal from './BeskrivelseModal.vue';
 import { useUserStore } from './stores/user.js';
 import { supabase } from '../lib/supabaseClient';
+import { logOutOutline } from "ionicons/icons";
 
 const store = useUserStore()
 

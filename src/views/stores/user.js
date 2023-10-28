@@ -31,5 +31,16 @@ export const useUserStore = defineStore('user', () => {
         router.push('/')
     }
 
-    return { user, jwt, userAttendance, login, fetchingData, isLoggedIn, userFullName }
+    const logout = async () => {
+        console.log('LOGOUT')
+        try {
+            const { error } = await supabase.auth.signOut()
+            if (error) throw error
+            router.push('/login')
+        } catch (error) {
+            alert(error.message)
+        }
+    }
+
+    return { user, jwt, userAttendance, login, fetchingData, isLoggedIn, userFullName, logout }
 })
