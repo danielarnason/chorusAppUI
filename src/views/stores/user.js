@@ -10,6 +10,7 @@ export const useUserStore = defineStore('user', () => {
     const userAttendance = ref()
     const fetchingData = ref(false)
     const userFullName = ref()
+    const userId = ref()
 
 
     
@@ -28,11 +29,43 @@ export const useUserStore = defineStore('user', () => {
             alert(error.error_description || error.message)
         }
 
+        fetchUserData()
+        // fetchAttendanceData(userId.value)
+
         router.push('/')
     }
 
+    const fetchAttendanceData = async (userId) => {
+        try {
+            const { data, error } = await supabase.from('attendance').select().eq('user_id', userId)
+            if (error) throw error
+            console.log(data)
+        } catch (error) {
+            alert(error.message)
+        }
+    }
+
+    const fetchUserData = async () => {
+        try {
+            const { data: { user }} = await supabase.auth.getUser()
+            userId.value = user.id
+            const { data, error } = await supabase.from('profiles').select().eq('id', user.id)
+            userFullName.value = `${data[0].first_name} ${data[0].last_name}`
+            if (error) throw error
+        } catch (error) {
+            alert(error.message)
+        }
+
+        try {
+            const { data, error } = await supabase.from('attendance').select().eq('user_id', userId.value)
+            if (error) throw error
+            console.log(data)
+        } catch (error) {
+            alert(error.message)
+        }
+    }
+
     const logout = async () => {
-        console.log('LOGOUT')
         try {
             const { error } = await supabase.auth.signOut()
             if (error) throw error
@@ -42,5 +75,5 @@ export const useUserStore = defineStore('user', () => {
         }
     }
 
-    return { user, jwt, userAttendance, login, fetchingData, isLoggedIn, userFullName, logout }
+    return { user, jwt, userAttendance, login, fetchingData, isLoggedIn, userFullName, logout, userId }
 })

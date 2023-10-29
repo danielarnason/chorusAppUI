@@ -12,7 +12,7 @@
         </ion-toolbar>
       </ion-header>
 
-      <h1 class="ion-padding">Hej {{ userFullName }}</h1>
+      <h1 class="ion-padding">Hej {{ store.userFullName }}</h1>
 
       <ion-card v-for="event in allEvents">
         <ion-card-header class="eventHeader" @click="openModal(event)">
@@ -22,10 +22,10 @@
         </ion-card-header>
         <ion-card-content>
           <p>Materiale: <strong>{{ event.materiale }}</strong></p>
-          <!-- <ion-item v-if="store.isLoggedIn && !store.fetchingData">
+          <ion-item v-if="store.isLoggedIn && !store.fetchingData">
             <ion-toggle @ion-change="toggleAttendance(event)" v-if="checkAttendance(event)">Deltager ikke</ion-toggle>
             <ion-toggle @ion-change="toggleAttendance(event)" v-else checked>Deltager ikke</ion-toggle>
-          </ion-item> -->
+          </ion-item>
         </ion-card-content>
       </ion-card>
 
@@ -156,15 +156,8 @@ const fetchEvents = async () => {
   }
 }
 
-const fetchUserName = async () => {
-  const { data: { user }} = await supabase.auth.getUser()
-  const { data, error } = await supabase.from('profiles').select().eq('id', user.id)
-  userFullName.value = `${data[0].first_name} ${data[0].last_name}`
-}
-
 onMounted(() => {
   fetchEvents()
-  fetchUserName()
 })
 </script>
 
