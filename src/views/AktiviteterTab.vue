@@ -5,7 +5,7 @@
       <ion-card v-for="event in allEvents">
         <ion-card-header class="eventHeader" @click="openModal(event)">
           <ion-card-title>{{ event.placering }}</ion-card-title>
-          <ion-card-subtitle>{{ event.dato }}</ion-card-subtitle>
+          <ion-card-subtitle>{{ parseDate(event.begivenhed_dato) }}</ion-card-subtitle>
           <ion-card-subtitle>{{ event.type }}</ion-card-subtitle>
         </ion-card-header>
         <ion-card-content>
@@ -16,12 +16,6 @@
           </ion-item>
         </ion-card-content>
       </ion-card>
-
-      <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-        <ion-fab-button @click="store.logout">
-          <ion-icon :icon="logOutOutline"></ion-icon>
-        </ion-fab-button>
-      </ion-fab>
       
       <BeskrivelseModal @closeModalEvent="closeModal" :modalVisible="modalVisible" :event="clickedEvent"/>
 
@@ -31,9 +25,6 @@
 
 <script setup>
 import { 
-  IonFab,
-  IonFabButton,
-  IonIcon,
   IonPage, 
   IonContent, 
   IonCard, 
@@ -46,11 +37,9 @@ import { onMounted, ref } from 'vue';
 import BeskrivelseModal from './BeskrivelseModal.vue';
 import { useUserStore } from './stores/user.js';
 import { supabase } from '../lib/supabaseClient';
-import { create, logOutOutline } from "ionicons/icons";
 
 const store = useUserStore()
 
-const title = 'Aktiviteter'
 const allEvents = ref([])
 const modalVisible = ref(false)
 const clickedEvent = ref()
@@ -62,6 +51,12 @@ const openModal = (event) => {
 
 const closeModal = () => {
   modalVisible.value = false
+}
+
+const parseDate = timestamp => {
+  const date = new Date(timestamp)
+  const formattedDate = `${date.toISOString().split('T')[0]} ${date.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' })}`;
+  return formattedDate
 }
 
 const toggleAttendance = async event => {
