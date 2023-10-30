@@ -19,7 +19,8 @@ const routes = [
       },
       {
         path: 'aktiviteter',
-        component: () => import('@/views/AktiviteterTab.vue')
+        component: () => import('@/views/AktiviteterTab.vue'),
+        name: 'Aktiviteter'
       },
       {
         path: 'nyhedsfeed',
@@ -40,6 +41,8 @@ router.beforeEach(async (to, from, next) => {
   const { data, error } = await supabase.auth.getSession()
   if (to.name !== 'Login' && data.session == null) {
     next({name: 'Login'})
+  } else if (to.name === 'Login' && data.session != null) {
+    next({name: 'Aktiviteter'})
   } else {
     next()
   }
