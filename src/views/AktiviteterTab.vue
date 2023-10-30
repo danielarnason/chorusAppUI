@@ -1,19 +1,7 @@
 <template>
   <ion-page>
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>{{title}}</ion-title>
-      </ion-toolbar>
-    </ion-header>
     <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">{{title}}</ion-title>
-        </ion-toolbar>
-      </ion-header>
-
       <h1 class="ion-padding">Hej {{ store.userFullName }}</h1>
-
       <ion-card v-for="event in allEvents">
         <ion-card-header class="eventHeader" @click="openModal(event)">
           <ion-card-title>{{ event.placering }}</ion-card-title>
@@ -23,7 +11,7 @@
         <ion-card-content>
           <p>Materiale: <strong>{{ event.materiale }}</strong></p>
           <ion-item>
-            <ion-toggle @ion-change="toggleAttendance(event)" v-if="checkAttendance(event)">Deltager ikke</ion-toggle>
+            <ion-toggle @ion-change="toggleAttendance(event)" v-if="checkAttendance(event)">Deltager</ion-toggle>
             <ion-toggle @ion-change="toggleAttendance(event)" v-else checked>Deltager ikke</ion-toggle>
           </ion-item>
         </ion-card-content>
@@ -47,9 +35,6 @@ import {
   IonFabButton,
   IonIcon,
   IonPage, 
-  IonHeader, 
-  IonToolbar, 
-  IonTitle, 
   IonContent, 
   IonCard, 
   IonCardContent, 
