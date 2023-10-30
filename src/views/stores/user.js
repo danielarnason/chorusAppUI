@@ -27,7 +27,7 @@ export const useUserStore = defineStore('user', () => {
             alert(error.error_description || error.message)
         }
 
-        router.push('/')
+        router.push('/tabs/aktiviteter')
     }
     
     const fetchUserData = async () => {
@@ -60,7 +60,7 @@ export const useUserStore = defineStore('user', () => {
             if (error) throw error
             // userId.value = null
             // userAttendance.value = []
-            router.push('/login')
+            router.push('/')
         } catch (error) {
             alert(error.message)
         }

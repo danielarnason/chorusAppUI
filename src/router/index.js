@@ -5,13 +5,9 @@ import { supabase } from '../lib/supabaseClient';
 
 const routes = [
   {
-    path: '/login',
+    path: '/',
     component: () => import('@/views/Login.vue'),
     name: 'Login'
-  },
-  {
-    path: '/',
-    redirect: '/tabs/aktiviteter'
   },
   {
     path: '/tabs/',
