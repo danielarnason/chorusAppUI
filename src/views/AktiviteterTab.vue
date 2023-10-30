@@ -22,9 +22,12 @@
         </ion-card-header>
         <ion-card-content>
           <p>Materiale: <strong>{{ event.materiale }}</strong></p>
-          <ion-item v-if="store.isLoggedIn && !store.fetchingData">
-            <ion-toggle @ion-change="toggleAttendance(event)" v-if="checkAttendance(event)">Deltager ikke</ion-toggle>
-            <ion-toggle @ion-change="toggleAttendance(event)" v-else checked>Deltager ikke</ion-toggle>
+          <ion-item>
+            <ion-toggle v-if="checkAttendance(event)">Deltager ikke</ion-toggle>
+            <ion-toggle v-else checked>Deltager ikke</ion-toggle>
+            <!-- <ion-toggle v-else checked>Deltager ikke</ion-toggle> -->
+            <!-- <ion-toggle @ion-change="toggleAttendance(event)" v-if="checkAttendance(event)">Deltager ikke</ion-toggle>
+              <ion-toggle @ion-change="toggleAttendance(event)" v-else checked>Deltager ikke</ion-toggle> -->
           </ion-item>
         </ion-card-content>
       </ion-card>
@@ -128,17 +131,9 @@ const updateAttendance = async (payload, attendanceId) => {
 }
 
 const checkAttendance = event => {
-  const attendanceLog = store.userAttendance
-  
-  const eventLogged = attendanceLog.some(obj => obj.attributes.event.data.id === event.id)
-  if (eventLogged) {
-    for (let i = 0; i < attendanceLog.length; i++) {
-      if (event.id == attendanceLog[i].attributes.event.data.id) {
-        return attendanceLog[i].attributes.present
-      }
-    }
-  } else {
-    return true
+  const attendanceEventIdx = allUserAttendance.value.findIndex(record => record.event_id === event.event_id)
+  if (attendanceEventIdx > -1) {
+    return allUserAttendance.value[attendanceEventIdx]
   }
 }
 
@@ -156,8 +151,29 @@ const fetchEvents = async () => {
   }
 }
 
+const fetchUserData = async () => {
+  try {
+      const { data: { user }} = await supabase.auth.getUser()
+      store.userId = user.id
+      const { data, error } = await supabase.from('profiles').select().eq('id', user.id)
+      store.userFullName = `${data[0].first_name} ${data[0].last_name}`
+      if (error) throw error
+  } catch (error) {
+      alert(error.message)
+  }
+
+  try {
+      const { data, error } = await supabase.from('attendance').select().eq('user_id', store.userId)
+      if (error) throw error
+      allUserAttendance.value = data
+  } catch (error) {
+      alert(error.message)
+  }
+}
+
 onMounted(() => {
   fetchEvents()
+  fetchUserData()
 })
 </script>
 

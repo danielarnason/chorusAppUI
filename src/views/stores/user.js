@@ -29,9 +29,6 @@ export const useUserStore = defineStore('user', () => {
             alert(error.error_description || error.message)
         }
 
-        fetchUserData()
-        // fetchAttendanceData(userId.value)
-
         router.push('/')
     }
 
@@ -45,25 +42,6 @@ export const useUserStore = defineStore('user', () => {
         }
     }
 
-    const fetchUserData = async () => {
-        try {
-            const { data: { user }} = await supabase.auth.getUser()
-            userId.value = user.id
-            const { data, error } = await supabase.from('profiles').select().eq('id', user.id)
-            userFullName.value = `${data[0].first_name} ${data[0].last_name}`
-            if (error) throw error
-        } catch (error) {
-            alert(error.message)
-        }
-
-        try {
-            const { data, error } = await supabase.from('attendance').select().eq('user_id', userId.value)
-            if (error) throw error
-            console.log(data)
-        } catch (error) {
-            alert(error.message)
-        }
-    }
 
     const logout = async () => {
         try {
