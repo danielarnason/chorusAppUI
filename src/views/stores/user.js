@@ -32,17 +32,6 @@ export const useUserStore = defineStore('user', () => {
         router.push('/')
     }
 
-    const fetchAttendanceData = async (userId) => {
-        try {
-            const { data, error } = await supabase.from('attendance').select().eq('user_id', userId)
-            if (error) throw error
-            console.log(data)
-        } catch (error) {
-            alert(error.message)
-        }
-    }
-
-
     const logout = async () => {
         try {
             const { error } = await supabase.auth.signOut()
