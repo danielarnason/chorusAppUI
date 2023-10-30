@@ -67,10 +67,8 @@ const store = useUserStore()
 
 const title = 'Aktiviteter'
 const allEvents = ref([])
-const allUserAttendance = ref([])
 const modalVisible = ref(false)
 const clickedEvent = ref()
-const userFullName = ref()
 
 const openModal = (event) => {
   clickedEvent.value = event
@@ -83,8 +81,8 @@ const closeModal = () => {
 
 const toggleAttendance = async event => {
   
-  const attendanceEventIdx = allUserAttendance.value.findIndex(record => record.event_id === event.event_id)
-  const attendanceRecord = allUserAttendance.value[attendanceEventIdx]
+  const attendanceEventIdx = store.userAttendance.findIndex(record => record.event_id === event.event_id)
+  const attendanceRecord = store.userAttendance[attendanceEventIdx]
 
   if (attendanceRecord) {
     try {
@@ -111,13 +109,13 @@ const toggleAttendance = async event => {
     }
   }
 
-  fetchAttendance()
+  store.fetchAttendance()
 }
 
 const checkAttendance = event => {
-  const attendanceEventIdx = allUserAttendance.value.findIndex(record => record.event_id === event.event_id)
+  const attendanceEventIdx = store.userAttendance.findIndex(record => record.event_id === event.event_id)
   if (attendanceEventIdx > -1) {
-    return allUserAttendance.value[attendanceEventIdx].present
+    return store.userAttendance[attendanceEventIdx].present
   } else {
     return true
   }
@@ -137,33 +135,9 @@ const fetchEvents = async () => {
   }
 }
 
-const fetchUserData = async () => {
-  try {
-      const { data: { user }} = await supabase.auth.getUser()
-      store.userId = user.id
-      const { data, error } = await supabase.from('profiles').select().eq('id', user.id)
-      store.userFullName = `${data[0].first_name} ${data[0].last_name}`
-      if (error) throw error
-  } catch (error) {
-      alert(error.message)
-  }
-
-  fetchAttendance()
-}
-
-const fetchAttendance = async () => {
-  try {
-      const { data, error } = await supabase.from('attendance').select().eq('user_id', store.userId)
-      if (error) throw error
-      allUserAttendance.value = data
-  } catch (error) {
-      alert(error.message)
-  }
-}
-
 onMounted(() => {
   fetchEvents()
-  fetchUserData()
+  store.fetchUserData()
 })
 </script>
 
