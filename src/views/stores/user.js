@@ -31,40 +31,47 @@ export const useUserStore = defineStore('user', () => {
     }
     
     const fetchUserData = async () => {
-        try {
-            const { data: { user }} = await supabase.auth.getUser()
-            userId.value = user.id
-            const { data, error } = await supabase.from('profiles').select().eq('id', user.id)
-            userFullName.value = `${data[0].first_name} ${data[0].last_name}`
-            if (error) throw error
-        } catch (error) {
-            alert(error.message)
-        }
+        const { data: { user }} = await supabase.auth.getUser()
+        userId.value = user.id
+        userFullName.value = `${user.user_metadata.fornavn} ${user.user_metadata.efternavn}`
     
         fetchAttendance()
     }
 
     const fetchAttendance = async () => {
-        try {
-            const { data, error } = await supabase.from('attendance').select().eq('user_id', userId.value)
-            if (error) throw error
-            userAttendance.value = data
-        } catch (error) {
-            alert(error.message)
-        }
+        const { data, error } = await supabase.from('attendance').select().eq('user_id', userId.value)
+        userAttendance.value = data
       }
 
     const logout = async () => {
         try {
             const { error } = await supabase.auth.signOut()
             if (error) throw error
-            // userId.value = null
-            // userAttendance.value = []
             router.push('/')
         } catch (error) {
             alert(error.message)
         }
     }
 
-    return { userAttendance, login, fetchingData, isLoggedIn, userFullName, logout, userId, fetchUserData, fetchAttendance }
+    const signup = async (email, password, fornavn, efternavn, stemmegruppe) => {
+        try {
+            const { data, error } = await supabase.auth.signUp({
+                email: email,
+                password: password,
+                options: {
+                    data: {
+                        fornavn: fornavn,
+                        efternavn: efternavn,
+                        stemmegruppe: stemmegruppe
+                    }
+                }
+            })
+            if (error) throw error
+            router.push('/tabs/aktiviteter')
+        } catch (error) {
+            alert(error.message)
+        }
+    }
+
+    return { userAttendance, login, fetchingData, isLoggedIn, userFullName, logout, userId, fetchUserData, fetchAttendance, signup }
 })
