@@ -25,6 +25,10 @@ const routes = [
       {
         path: 'nyhedsfeed',
         component: () => import('@/views/NyhedsFeed.vue')
+      },
+      {
+        path: 'medlemmer',
+        component: () => import('@/views/Medlemmer.vue')
       }
     ]
   }

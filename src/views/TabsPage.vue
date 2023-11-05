@@ -13,6 +13,11 @@
           <ion-label>Nyheder</ion-label>
         </ion-tab-button>
 
+        <ion-tab-button tab="medlemmer" href="/tabs/medlemmer">
+          <ion-icon aria-hidden="true" :icon="peopleOutline" />
+          <ion-label>Medlemmer</ion-label>
+        </ion-tab-button>
+
         <ion-tab-button tab="signOut" @click="store.logout">
           <ion-icon aria-hidden="true" :icon="logOutOutline" />
           <ion-label>Log ud</ion-label>
@@ -24,7 +29,7 @@
 
 <script setup lang="ts">
 import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet} from '@ionic/vue';
-import { newspaperOutline , calendarOutline, logOutOutline, chevronDownCircle } from 'ionicons/icons';
+import { newspaperOutline , calendarOutline, logOutOutline, peopleOutline } from 'ionicons/icons';
 import { useUserStore } from './stores/user';
 
 const store = useUserStore()
