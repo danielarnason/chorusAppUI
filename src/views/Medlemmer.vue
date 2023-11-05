@@ -80,7 +80,7 @@
 </template>
 
 <script setup>
-import { IonPage, IonContent, IonList, IonItem, IonLabel, IonText } from '@ionic/vue';
+import { IonPage, IonContent, IonList, IonItem, IonLabel, IonAvatar } from '@ionic/vue';
 import { supabase } from '../lib/supabaseClient';
 import { computed, onMounted, ref } from 'vue';
 

@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-      <h1 class="ion-padding">Hej {{ store.userFullName }}</h1>
+      <h1 class="ion-padding">{{ store.userFullName }}</h1>
       <ion-card v-for="event in allEvents">
         <ion-card-header class="eventHeader" @click="openModal(event)">
           <ion-card-title>{{ event.placering }}</ion-card-title>
@@ -32,7 +32,8 @@ import {
   IonCardHeader, 
   IonCardSubtitle, 
   IonCardTitle, 
-  IonToggle} from '@ionic/vue';
+  IonToggle,
+  IonItem} from '@ionic/vue';
 import { onMounted, ref } from 'vue';
 import BeskrivelseModal from './BeskrivelseModal.vue';
 import { useUserStore } from './stores/user.js';
