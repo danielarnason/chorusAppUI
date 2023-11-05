@@ -4,11 +4,11 @@
             <h3>Login til Chorus Soranus</h3>
             <ion-item>
                 <ion-label>E-mail</ion-label>
-                <ion-input v-model="email"></ion-input>
+                <ion-input label="Email" v-model="email"></ion-input>
             </ion-item>
             <ion-item>
                 <ion-label>Password</ion-label>
-                <ion-input v-model="password" type="password"></ion-input>
+                <ion-input label="Password" v-model="password" type="password"></ion-input>
             </ion-item>
     
             <ion-button @click="handleLogin()">Login</ion-button>
@@ -21,7 +21,7 @@
 </template>
 
 <script setup>
-import { IonPage, IonItem, IonLabel, IonInput, IonButton } from '@ionic/vue';
+import { IonPage, IonItem, IonLabel, IonInput, IonButton, IonContent } from '@ionic/vue';
 import { useUserStore } from './stores/user.js'
 import { ref } from 'vue';
 import SignupModal from './SignupModal.vue'
