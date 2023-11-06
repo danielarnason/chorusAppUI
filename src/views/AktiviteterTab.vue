@@ -2,14 +2,14 @@
   <ion-page>
     <ion-content :fullscreen="true">
       <h1 class="ion-padding">{{ store.userFullName }}</h1>
-      <ion-card v-for="event in allEvents">
+              <ion-card v-for="event in allEvents">
         <ion-card-header class="eventHeader" @click="openModal(event)">
-          <ion-card-title>{{ event.placering }}</ion-card-title>
-          <ion-card-subtitle>{{ parseDate(event.begivenhed_dato) }}</ion-card-subtitle>
-          <ion-card-subtitle>{{ event.type }}</ion-card-subtitle>
+          <ion-card-subtitle>{{ parseDate(event.startDate) }}</ion-card-subtitle>
+          <ion-card-subtitle>{{ event.location }}</ion-card-subtitle>
+          <ion-card-title>{{ event.description }}</ion-card-title>
         </ion-card-header>
         <ion-card-content>
-          <p>Materiale: <strong>{{ event.materiale }}</strong></p>
+          <p>Materiale: <strong>{{ event.repertoire }}</strong></p>
           <ion-item>
             <ion-toggle @ion-change="toggleAttendance(event)" v-if="checkAttendance(event)">Deltager</ion-toggle>
             <ion-toggle @ion-change="toggleAttendance(event)" v-else checked>Deltager ikke</ion-toggle>
@@ -25,6 +25,9 @@
 
 <script setup>
 import { 
+  IonText,
+  IonButton,
+  IonIcon,
   IonPage, 
   IonContent, 
   IonCard, 
@@ -38,6 +41,7 @@ import { onMounted, ref } from 'vue';
 import BeskrivelseModal from './BeskrivelseModal.vue';
 import { useUserStore } from './stores/user.js';
 import { supabase } from '../lib/supabaseClient';
+import { personOutline } from 'ionicons/icons';
 
 const store = useUserStore()
 
@@ -116,8 +120,16 @@ const fetchEvents = async () => {
   }
 }
 
+const fetchEventsNy = async () => {
+  const data = await fetch('https://cal.chorus.soranus.dk/api/items').then(resp => resp.json())
+  // console.log(data)
+  allEvents.value = data
+  store.fetchingData = false
+}
+
 onMounted(() => {
-  fetchEvents()
+  // fetchEvents()
+  fetchEventsNy()
   store.fetchUserData()
 })
 </script>
