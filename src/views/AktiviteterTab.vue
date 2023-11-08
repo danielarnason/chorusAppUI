@@ -2,11 +2,11 @@
   <ion-page>
     <ion-content :fullscreen="true">
       <h1 class="ion-padding">{{ store.userFullName }}</h1>
-              <ion-card v-for="event in allEvents">
+              <ion-card v-for="event in futureEvents">
         <ion-card-header class="eventHeader" @click="openModal(event)">
-          <ion-card-subtitle>{{ parseDate(event.startDate) }}</ion-card-subtitle>
-          <ion-card-subtitle>{{ event.location }}</ion-card-subtitle>
           <ion-card-title>{{ event.description }}</ion-card-title>
+          <ion-card-subtitle>{{ parseDate(event.startDate) }}</ion-card-subtitle>
+          <ion-card-subtitle>{{ event.location.split(',')[0] }}</ion-card-subtitle>
         </ion-card-header>
         <ion-card-content>
           <p>Materiale: <strong>{{ event.repertoire }}</strong></p>
@@ -25,9 +25,6 @@
 
 <script setup>
 import { 
-  IonText,
-  IonButton,
-  IonIcon,
   IonPage, 
   IonContent, 
   IonCard, 
@@ -37,7 +34,7 @@ import {
   IonCardTitle, 
   IonToggle,
   IonItem} from '@ionic/vue';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import BeskrivelseModal from './BeskrivelseModal.vue';
 import { useUserStore } from './stores/user.js';
 import { supabase } from '../lib/supabaseClient';
@@ -48,6 +45,14 @@ const store = useUserStore()
 const allEvents = ref([])
 const modalVisible = ref(false)
 const clickedEvent = ref()
+
+const futureEvents = computed(() => {
+  const currentDate = new Date()
+  return allEvents.value.filter(obj => {
+    const objDate = new Date(obj.startDate)
+    return objDate >= currentDate
+  })
+})
 
 const openModal = (event) => {
   clickedEvent.value = event
@@ -66,7 +71,7 @@ const parseDate = timestamp => {
 
 const toggleAttendance = async event => {
   
-  const attendanceEventIdx = store.userAttendance.findIndex(record => record.event_id === event.event_id)
+  const attendanceEventIdx = store.userAttendance.findIndex(record => record.event_id === event.id)
   const attendanceRecord = store.userAttendance[attendanceEventIdx]
 
   if (attendanceRecord) {
@@ -84,7 +89,7 @@ const toggleAttendance = async event => {
       const { error } = await supabase
         .from('attendance')
         .insert({
-          event_id: event.event_id,
+          event_id: event.id,
           user_id: store.userId,
           present: false
         })
@@ -98,7 +103,7 @@ const toggleAttendance = async event => {
 }
 
 const checkAttendance = event => {
-  const attendanceEventIdx = store.userAttendance.findIndex(record => record.event_id === event.event_id)
+  const attendanceEventIdx = store.userAttendance.findIndex(record => record.event_id === event.id)
   if (attendanceEventIdx > -1) {
     return store.userAttendance[attendanceEventIdx].present
   } else {
@@ -106,19 +111,19 @@ const checkAttendance = event => {
   }
 }
 
-const fetchEvents = async () => {
-  try {
-    const { data, error } = await supabase
-      .from('events')
-      .select()
-    if (error) throw error
+// const fetchEvents = async () => {
+//   try {
+//     const { data, error } = await supabase
+//       .from('events')
+//       .select()
+//     if (error) throw error
 
-    allEvents.value = data
-    store.fetchingData = false
-  } catch (error) {
-    alert(error.message)
-  }
-}
+//     allEvents.value = data
+//     store.fetchingData = false
+//   } catch (error) {
+//     alert(error.message)
+//   }
+// }
 
 const fetchEventsNy = async () => {
   const data = await fetch('https://cal.chorus.soranus.dk/api/items').then(resp => resp.json())
