@@ -1,7 +1,8 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-      <ion-card v-for="news in allNews">
+      <Refresher />
+      <ion-card v-for="news in store.allNewsSorted">
         <ion-card-header>
           <ion-card-title>{{ news.titel }}</ion-card-title>
           <ion-card-subtitle>{{ parseDate(news.created_at) }}</ion-card-subtitle>
@@ -17,28 +18,11 @@
 
 <script setup>
 import { IonPage, IonContent, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent } from '@ionic/vue';
-import { onMounted, ref } from 'vue';
-import { supabase } from '../lib/supabaseClient';
+import { onMounted } from 'vue';
+import { useUserStore } from './stores/user';
+import Refresher from './Refresher.vue';
 
-const allNews= ref()
-
-const fetchAllNews = async () => {
-  try {
-    const { data, error } = await supabase
-      .from('news')
-      .select()
-    if (error) throw error
-
-    allNews.value = data
-  } catch (error) {
-    alert(error.message)
-  }
-  // fetch('http://localhost:8080/api/nyheder')
-  //   .then(response => response.json())
-  //   .then(data => {
-  //     allNews.value = data.data
-  //   })
-}
+const store = useUserStore()
 
 const parseDate = timestamp => {
   const date = new Date(timestamp)
@@ -47,7 +31,7 @@ const parseDate = timestamp => {
 }
 
 onMounted(() => {
-  fetchAllNews()
+  store.fetchAllNews()
 })
 
 </script>

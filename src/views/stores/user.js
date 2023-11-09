@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import router from "../../router";
 import { supabase } from "../../lib/supabaseClient";
 
@@ -9,6 +9,14 @@ export const useUserStore = defineStore('user', () => {
     const fetchingData = ref(false)
     const userFullName = ref()
     const userId = ref()
+    const allNews = ref()
+
+    const allNewsSorted = computed(() => {
+        const sortedNews = allNews.value?.sort((a, b) => {
+            return new Date(b.created_at) - new Date(a.created_at)
+        })
+        return sortedNews
+    })
 
     const login = async (email, password) => {
         fetchingData.value = true
@@ -73,5 +81,18 @@ export const useUserStore = defineStore('user', () => {
         }
     }
 
-    return { userAttendance, login, fetchingData, isLoggedIn, userFullName, logout, userId, fetchUserData, fetchAttendance, signup }
+    const fetchAllNews = async () => {
+        try {
+          const { data, error } = await supabase
+            .from('news')
+            .select()
+          if (error) throw error
+      
+          allNews.value = data
+        } catch (error) {
+          alert(error.message)
+        }
+      }
+
+    return { userAttendance, login, fetchingData, isLoggedIn, userFullName, logout, userId, fetchUserData, fetchAttendance, signup, fetchAllNews, allNewsSorted }
 })

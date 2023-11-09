@@ -39,7 +39,7 @@
 
 <script setup>
 import { IonModal, IonContent, IonItem, IonLabel, IonInput, IonSelect, IonSelectOption, IonButton } from '@ionic/vue'
-import { ref, defineEmits } from 'vue';
+import { ref } from 'vue';
 import { useUserStore } from './stores/user';
 
 const store = useUserStore()

@@ -38,7 +38,6 @@ import { computed, onMounted, ref } from 'vue';
 import BeskrivelseModal from './BeskrivelseModal.vue';
 import { useUserStore } from './stores/user.js';
 import { supabase } from '../lib/supabaseClient';
-import { personOutline } from 'ionicons/icons';
 
 const store = useUserStore()
 
