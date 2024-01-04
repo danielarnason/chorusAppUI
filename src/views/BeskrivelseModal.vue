@@ -9,7 +9,13 @@
           </ion-toolbar>
         </ion-header>
         <ion-content class="ion-padding">
-          {{props.event.beskrivelse}}
+          Her kan vi skrive hvad som helst! <br>
+          Alle ekstra info om en given aktivitet<br><br>
+          F.eks. data om selve begivenheden fra API'et.<br>
+          Man kunne også vise links til optagelser fra Spotify/youtube eller have links til pdf noder.
+          <br><br>
+
+          Deltagere: {{props.event.participants}}
         </ion-content>
       </ion-modal>
 </template>
