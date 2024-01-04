@@ -1,8 +1,9 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
+      <Refresher />
       <h1 class="ion-padding">{{ store.userFullName }}</h1>
-              <ion-card v-for="event in futureEvents">
+              <ion-card v-for="event in store.futureEvents">
         <ion-card-header class="eventHeader" @click="openModal(event)">
           <ion-card-title>{{ event.description }}</ion-card-title>
           <ion-card-subtitle>{{ parseDate(event.startDate) }}</ion-card-subtitle>
@@ -10,10 +11,10 @@
         </ion-card-header>
         <ion-card-content>
           <p>Materiale: <strong>{{ event.repertoire }}</strong></p>
-          <ion-item>
+          <!-- <ion-item>
             <ion-toggle @ion-change="toggleAttendance(event)" v-if="checkAttendance(event)">Deltager</ion-toggle>
             <ion-toggle @ion-change="toggleAttendance(event)" v-else checked>Deltager ikke</ion-toggle>
-          </ion-item>
+          </ion-item> -->
         </ion-card-content>
       </ion-card>
       
@@ -38,6 +39,7 @@ import { computed, onMounted, ref } from 'vue';
 import BeskrivelseModal from './BeskrivelseModal.vue';
 import { useUserStore } from './stores/user.js';
 import { supabase } from '../lib/supabaseClient';
+import Refresher from './Refresher.vue';
 
 const store = useUserStore()
 
@@ -110,30 +112,8 @@ const checkAttendance = event => {
   }
 }
 
-// const fetchEvents = async () => {
-//   try {
-//     const { data, error } = await supabase
-//       .from('events')
-//       .select()
-//     if (error) throw error
-
-//     allEvents.value = data
-//     store.fetchingData = false
-//   } catch (error) {
-//     alert(error.message)
-//   }
-// }
-
-const fetchEventsNy = async () => {
-  const data = await fetch('https://cal.chorus.soranus.dk/api/items').then(resp => resp.json())
-  // console.log(data)
-  allEvents.value = data
-  store.fetchingData = false
-}
-
 onMounted(() => {
-  // fetchEvents()
-  fetchEventsNy()
+  store.fetchEvents()
   store.fetchUserData()
 })
 </script>

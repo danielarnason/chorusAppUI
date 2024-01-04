@@ -10,6 +10,14 @@ export const useUserStore = defineStore('user', () => {
     const userFullName = ref()
     const userId = ref()
     const allNews = ref()
+    const allEvents = ref()
+    const futureEvents = computed(() => {
+        const currentDate = new Date()
+        return allEvents.value?.filter(obj => {
+          const objDate = new Date(obj.startDate)
+          return objDate >= currentDate
+        })
+      })
 
     const allNewsSorted = computed(() => {
         const sortedNews = allNews.value?.sort((a, b) => {
@@ -94,5 +102,11 @@ export const useUserStore = defineStore('user', () => {
         }
       }
 
-    return { userAttendance, login, fetchingData, isLoggedIn, userFullName, logout, userId, fetchUserData, fetchAttendance, signup, fetchAllNews, allNewsSorted }
+      const fetchEvents = async () => {
+        const data = await fetch('https://cal.chorus.soranus.dk/api/items')
+            .then(resp => resp.json())
+        allEvents.value = data
+      }
+
+    return { userAttendance, login, fetchingData, isLoggedIn, userFullName, logout, userId, fetchUserData, fetchAttendance, signup, fetchAllNews, allNewsSorted, fetchEvents, futureEvents }
 })

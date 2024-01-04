@@ -13,6 +13,7 @@ const store = useUserStore()
 const handleRefresh = async (event) => {
     console.log('refresh!')
     await store.fetchAllNews()
+    await store.fetchEvents()
     event.target.complete()
 }
 
