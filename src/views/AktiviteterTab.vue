@@ -11,10 +11,6 @@
         </ion-card-header>
         <ion-card-content>
           <p>Materiale: <strong>{{ event.repertoire }}</strong></p>
-          <!-- <ion-item>
-            <ion-toggle @ion-change="toggleAttendance(event)" v-if="checkAttendance(event)">Deltager</ion-toggle>
-            <ion-toggle @ion-change="toggleAttendance(event)" v-else checked>Deltager ikke</ion-toggle>
-          </ion-item> -->
         </ion-card-content>
       </ion-card>
       
@@ -32,10 +28,8 @@ import {
   IonCardContent, 
   IonCardHeader, 
   IonCardSubtitle, 
-  IonCardTitle, 
-  IonToggle,
-  IonItem} from '@ionic/vue';
-import { computed, onMounted, ref } from 'vue';
+  IonCardTitle} from '@ionic/vue';
+import { onMounted, ref } from 'vue';
 import BeskrivelseModal from './BeskrivelseModal.vue';
 import { useUserStore } from './stores/user.js';
 import { supabase } from '../lib/supabaseClient';
@@ -43,17 +37,8 @@ import Refresher from './Refresher.vue';
 
 const store = useUserStore()
 
-const allEvents = ref([])
 const modalVisible = ref(false)
 const clickedEvent = ref()
-
-const futureEvents = computed(() => {
-  const currentDate = new Date()
-  return allEvents.value.filter(obj => {
-    const objDate = new Date(obj.startDate)
-    return objDate >= currentDate
-  })
-})
 
 const openModal = (event) => {
   clickedEvent.value = event
@@ -68,48 +53,6 @@ const parseDate = timestamp => {
   const date = new Date(timestamp)
   const formattedDate = `${date.toISOString().split('T')[0]} ${date.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' })}`;
   return formattedDate
-}
-
-const toggleAttendance = async event => {
-  
-  const attendanceEventIdx = store.userAttendance.findIndex(record => record.event_id === event.id)
-  const attendanceRecord = store.userAttendance[attendanceEventIdx]
-
-  if (attendanceRecord) {
-    try {
-      const { error } = await supabase
-        .from('attendance')
-        .update({ present: !attendanceRecord.present })
-        .eq('id', attendanceRecord.id)
-      if (error) throw error
-    } catch (error) {
-      alert(error.message)
-    }
-  } else {
-    try {
-      const { error } = await supabase
-        .from('attendance')
-        .insert({
-          event_id: event.id,
-          user_id: store.userId,
-          present: false
-        })
-      if (error) throw error
-    } catch (error) {
-      alert(error.message)
-    }
-  }
-
-  store.fetchAttendance()
-}
-
-const checkAttendance = event => {
-  const attendanceEventIdx = store.userAttendance.findIndex(record => record.event_id === event.id)
-  if (attendanceEventIdx > -1) {
-    return store.userAttendance[attendanceEventIdx].present
-  } else {
-    return true
-  }
 }
 
 onMounted(() => {

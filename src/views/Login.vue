@@ -12,10 +12,10 @@
             </ion-item>
     
             <ion-button @click="handleLogin()">Login</ion-button>
-            <ion-button @click="openLoginModal()" fill="outline">Tilmeld</ion-button>
+            <ion-button @click="openSignupModal()" fill="outline">Tilmeld</ion-button>
         </ion-content>
 
-        <SignupModal :modalVisible="loginModalVisible" @closeLoginModalEvent="closeLoginModal" @signupEvent="closeLoginModal"/>
+        <SignupModal :modalVisible="signupModalVisible" @closeSignupModalEvent="closeSignupModal" @signupEvent="closeSignupModal"/>
         
     </ion-page>
 </template>
@@ -29,17 +29,17 @@ import SignupModal from './SignupModal.vue'
 const store = useUserStore()
 const email = ref()
 const password = ref()
-const loginModalVisible = ref(false)
+const signupModalVisible = ref(false)
 
 const handleLogin = () => {
     store.login(email.value, password.value)
 }
 
-const openLoginModal = () => {
-    loginModalVisible.value = true
+const openSignupModal = () => {
+    signupModalVisible.value = true
 }
 
-const closeLoginModal = () => {
-    loginModalVisible.value = false
+const closeSignupModal = () => {
+    signupModalVisible.value = false
 }
 </script>

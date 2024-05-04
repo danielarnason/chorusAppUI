@@ -5,12 +5,12 @@ import { supabase } from "../../lib/supabaseClient";
 
 export const useUserStore = defineStore('user', () => {
     const isLoggedIn = ref(false)
-    const userAttendance = ref([])
     const fetchingData = ref(false)
     const userFullName = ref()
     const userId = ref()
     const allNews = ref()
     const allEvents = ref()
+
     const futureEvents = computed(() => {
         const currentDate = new Date()
         return allEvents.value?.filter(obj => {
@@ -51,13 +51,7 @@ export const useUserStore = defineStore('user', () => {
         userId.value = user.id
         userFullName.value = `${user.user_metadata.fornavn} ${user.user_metadata.efternavn}`
     
-        fetchAttendance()
     }
-
-    const fetchAttendance = async () => {
-        const { data, error } = await supabase.from('attendance').select().eq('user_id', userId.value)
-        userAttendance.value = data
-      }
 
     const logout = async () => {
         try {
@@ -108,5 +102,5 @@ export const useUserStore = defineStore('user', () => {
         allEvents.value = data
       }
 
-    return { userAttendance, login, fetchingData, isLoggedIn, userFullName, logout, userId, fetchUserData, fetchAttendance, signup, fetchAllNews, allNewsSorted, fetchEvents, futureEvents }
+    return { login, fetchingData, isLoggedIn, userFullName, logout, userId, fetchUserData, signup, fetchAllNews, allNewsSorted, fetchEvents, futureEvents }
 })

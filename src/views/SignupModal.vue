@@ -1,5 +1,5 @@
 <template>
-    <ion-modal :initial-breakpoint="0.75" :breakpoints="[0, 0.75]" :is-open="modalVisible" @didDismiss="$emit('closeLoginModalEvent')">
+    <ion-modal :initial-breakpoint="0.75" :breakpoints="[0, 0.75]" :is-open="modalVisible" @didDismiss="$emit('closeSignupModalEvent')">
         <ion-content class="ion-padding">
             <h3>Tilmeld til Chorus Soranus</h3>
             <ion-item>
