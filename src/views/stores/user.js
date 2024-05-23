@@ -15,7 +15,11 @@ export const useUserStore = defineStore('user', () => {
         const currentDate = new Date()
         return allEvents.value?.filter(obj => {
           const objDate = new Date(obj.startDate)
-          return objDate >= currentDate
+
+          const currentDateOnly = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate())
+          const objDateOnly = new Date(objDate.getFullYear(), objDate.getMonth(), objDate.getDate())
+          
+          return objDateOnly >= currentDateOnly
         })
       })
 
