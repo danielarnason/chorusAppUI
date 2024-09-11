@@ -7,6 +7,6 @@ export const supabase = createClient('https://ogbgfvnmaqjspoehxpzi.supabase.co',
 })
 
 export const api = {
-    itemUri: 'https://adm.chorus.soranus.dk/api/calendar/items/app-items',
-    token: '<token>'
+    itemUrl: import.meta.env.VITE_APP_ITEMS_URL,
+    token: import.meta.env.VITE_APP_ITEMS_TOKEN
 }

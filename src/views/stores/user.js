@@ -101,12 +101,11 @@ export const useUserStore = defineStore('user', () => {
       }
 
       const fetchEvents = async () => {
-        const data = await fetch(api.itemUri, {
+        const data = await fetch(api.itemUrl, {
             headers: {
                 'x-app-token': api.token,
             }
-        })
-            .then(resp => resp.json())
+        }).then(resp => resp.json())
         allEvents.value = data
       }
 
