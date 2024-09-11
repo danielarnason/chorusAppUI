@@ -5,3 +5,8 @@ export const supabase = createClient('https://ogbgfvnmaqjspoehxpzi.supabase.co',
         schema: 'chorussoranus'
     }
 })
+
+export const api = {
+    itemUri: 'https://adm.chorus.soranus.dk/api/calendar/items/app-items',
+    token: '<token>'
+}

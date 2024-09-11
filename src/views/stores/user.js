@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import router from "../../router";
-import { supabase } from "../../lib/supabaseClient";
+import { supabase, api } from "../../lib/supabaseClient";
 
 export const useUserStore = defineStore('user', () => {
     const isLoggedIn = ref(false)
@@ -101,7 +101,11 @@ export const useUserStore = defineStore('user', () => {
       }
 
       const fetchEvents = async () => {
-        const data = await fetch('https://cal.chorus.soranus.dk/api/items')
+        const data = await fetch(api.itemUri, {
+            headers: {
+                'x-app-token': api.token,
+            }
+        })
             .then(resp => resp.json())
         allEvents.value = data
       }
