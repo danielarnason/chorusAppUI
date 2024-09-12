@@ -5,3 +5,8 @@ export const supabase = createClient('https://ogbgfvnmaqjspoehxpzi.supabase.co',
         schema: 'chorussoranus'
     }
 })
+
+export const api = {
+    itemUrl: import.meta.env.VITE_APP_ITEMS_URL,
+    token: import.meta.env.VITE_APP_ITEMS_TOKEN
+}
